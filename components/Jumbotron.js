@@ -20,7 +20,6 @@ export default () => {
       this.scene = scene;
       this.renderer = renderer;
     };
-
     addCamera = () => {
       let camera = new THREE.PerspectiveCamera(
         45,
@@ -31,15 +30,13 @@ export default () => {
       camera.position.set(-118, 0, 388);
       this.camera = camera;
     };
-
     addLight = (color, ins) => {
-      const ambientLight = new THREE.AmbientLight(color, ins);
-      let pointLight = new THREE.PointLight(0xfffafa, 1);
-      pointLight.position.set(-20, 20, 0);
+      const ambientLight = new THREE.AmbientLight(0xf4f4f4, 1);
+      let pointLight = new THREE.PointLight(color, ins);
+      pointLight.position.set(-10, 150, 50);
       this.scene.add(ambientLight);
       this.scene.add(pointLight);
     };
-
     addSphere = (color, size, res) => {
       let geo = new THREE.SphereGeometry(size, res, res);
       let mat = new THREE.MeshLambertMaterial({
@@ -116,7 +113,7 @@ export default () => {
       this.addScene();
       this.addCamera();
 
-      this.addLight(0xf4f4f4, 1);
+      this.addLight(0xfffafa, 1);
       this.addSphere(0x444044, 75, 20);
       this.addMercury(0xfff0ff, 5, 30);
       this.addOrbit();

@@ -30,11 +30,6 @@ export const Navigation = () => {
           .auth{
               display:flex;
               flex-direction:row;
-              list-style:none;
-              margin:0;
-              padding:0;
-              font-family:RoobertRegular;
-              color:#404044;
               font-size:24px;
           }
           .auth li:first-child{
