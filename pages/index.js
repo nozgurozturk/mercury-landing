@@ -1,18 +1,15 @@
 import React from "react";
-import dynamic from "next/dynamic";
+
 
 import { Navigation } from "../components/Navigation";
+import { Jumbotron } from "../components/Jumbotron";
 import { Info } from "../components/Info";
 import { Footer } from "../components/Footer";
-
-const JumbtotronNoSSR = dynamic(() => import("../components/Jumbotron"), {
-  ssr: false
-});
 
 const Home = () => (
   <div className="mercury-container">
     <Navigation />
-    <JumbtotronNoSSR />
+    <Jumbotron />
     <Info />
     <Footer />
     <style jsx global>{`
