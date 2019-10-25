@@ -1,20 +1,20 @@
 import React from "react";
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 
 import { Navigation } from "../components/Navigation";
 import { Info } from "../components/Info";
-//import { Jumbotron } from "../components/Jumbotron";
+import { Footer } from "../components/Footer";
 
-const JumbtotronNoSSR = dynamic(
-  () => import('../components/Jumbotron'),
-  { ssr: false }
-)
+const JumbtotronNoSSR = dynamic(() => import("../components/Jumbotron"), {
+  ssr: false
+});
 
 const Home = () => (
   <div className="mercury-container">
     <Navigation />
     <JumbtotronNoSSR />
     <Info />
+    <Footer />
     <style jsx global>{`
       body {
         margin: 0;
@@ -23,11 +23,11 @@ const Home = () => (
         background-image: linear-gradient(
           to bottom,
           rgba(240, 240, 255, 1),
-          rgba(64, 64, 68, 1)
+          rgba(30, 30, 34, 1)
         );
         font-family: RoobertRegular;
         color: #404044;
-        overflow-x:hidden;
+        overflow-x: hidden;
       }
       ul {
         list-style: none;
@@ -49,7 +49,7 @@ const Home = () => (
       .mercury-container {
         max-width: 960px;
         margin: 0 auto;
-        padding:48px 10px;
+        padding: 48px 10px;
         display: flex;
         flex-direction: column;
       }
