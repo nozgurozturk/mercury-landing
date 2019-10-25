@@ -2,6 +2,7 @@ import React from "react";
 import dynamic from 'next/dynamic'
 
 import { Navigation } from "../components/Navigation";
+import { Info } from "../components/Info";
 //import { Jumbotron } from "../components/Jumbotron";
 
 const JumbtotronNoSSR = dynamic(
@@ -13,6 +14,7 @@ const Home = () => (
   <div className="mercury-container">
     <Navigation />
     <JumbtotronNoSSR />
+    <Info />
     <style jsx global>{`
       body {
         margin: 0;
@@ -25,6 +27,7 @@ const Home = () => (
         );
         font-family: RoobertRegular;
         color: #404044;
+        overflow-x:hidden;
       }
       ul {
         list-style: none;
