@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { useEffect, useState } from "react";
-import { TweenMax, Expo, ColorPropsPlugin } from "gsap/all";
+import { TweenMax, Expo } from "gsap/all";
 
 export default props => {
-  const [cam, setCamera] = useState(
+  const [cam, setCam] = useState(
     new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
@@ -22,8 +22,8 @@ export default props => {
       alpha: true
     });
     scene = new THREE.Scene();
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // renderer.shadowMap.enabled = true;
+    // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   };
   const addLight = (color, ins) => {
     const ambientLight = new THREE.AmbientLight(0xf4f4f4, 1);
@@ -37,7 +37,7 @@ export default props => {
     let geo = new THREE.SphereGeometry(size, res, res);
     let mat = new THREE.MeshPhysicalMaterial({
       color: color,
-      roughness: 0.6,
+      roughness: 0.8,
       metalness: 0.2
     });
     let mesh = new THREE.Mesh(geo, mat);
@@ -56,7 +56,16 @@ export default props => {
   };
 
   const addOrbit = () => {
-    let curve = new THREE.EllipseCurve(0, 0, 150, 100, 0, 2 * Math.PI, false, 0);
+    let curve = new THREE.EllipseCurve(
+      0,
+      0,
+      150,
+      100,
+      0,
+      2 * Math.PI,
+      false,
+      0
+    );
     let points = curve.getPoints(600);
     orbit = new THREE.Geometry()
       .setFromPoints(points)
@@ -86,17 +95,6 @@ export default props => {
     renderer.setSize(width, height);
     cam.aspect = width / height;
     cam.updateProjectionMatrix();
-    renderScene();
-  };
-
-  const animate = () => {
-    moveMercury();
-    renderScene();
-    frameID = window.requestAnimationFrame(animate);
-    if (resizeRendererToDisplaySize(renderer)) {
-      cam.aspect = canvas.clientWidth / canvas.clientHeight;
-      cam.updateProjectionMatrix();
-    }
   };
 
   const animateCamera = bool => {
@@ -124,17 +122,28 @@ export default props => {
       });
     }
   };
+
+  const animate = () => {
+    moveMercury();
+    renderScene();
+    frameID = window.requestAnimationFrame(animate);
+    if (resizeRendererToDisplaySize(renderer)) {
+      cam.aspect = canvas.clientWidth / canvas.clientHeight;
+      cam.updateProjectionMatrix();
+    }
+  };
   const start = () => {
     if (!frameID) {
       frameID = requestAnimationFrame(animate);
     }
   };
+
   useEffect(() => {
     addScene();
     cam.position.set(-118, 0, 388);
     addLight(0xfffafa, 2);
-    addSphere(0x444044, 75, 50);
-    addMercury(0xfff0ff, 5, 30);
+    addSphere(0x444044, 75, 30);
+    addMercury(0xfff0ff, 5, 10);
     addOrbit();
     start();
   }, []);
@@ -142,6 +151,7 @@ export default props => {
   useEffect(() => {
     animateCamera(props.move);
   }, [props.move]);
+
   return (
     <>
       <canvas id="planet-mercury"></canvas>
