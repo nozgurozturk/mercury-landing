@@ -1,24 +1,23 @@
-
-import { useEffect, useState } from "react";
-
-
+import { useEffect, useState, useRef } from "react";
+import { TweenMax, Power4 } from "gsap";
 export const Info = () => {
-  
-
+  const [lazy, setLazy] = useState(false);
+  const screnRef = useRef();
   useEffect(() => {
-    const GSAP = require('gsap/all')
-    const {TweenMax, Power4} = GSAP
-    const screen = document.querySelector(".mercury-screen");
-    let lazy = false;
-    window.addEventListener("scroll", () => {
-      if (screen.getBoundingClientRect().top < window.innerHeight / 2) {
-        lazy = true;
+    const handleScroll = () => {
+      if (screnRef.current.getBoundingClientRect().top < window.innerHeight / 2) {
+        setLazy(true);
       }
-      if (lazy) {
-        TweenMax.to(screen, 2.4, { x: -400, ease: Power4.easeOut });
-      }
-    });
+    };
+    window.addEventListener("scroll", handleScroll);
   }, []);
+  useEffect(() => {
+    if (lazy) {
+      TweenMax.to(screnRef.current, 2.4, { x: -400, ease: Power4.easeOut });
+    }
+  }, [lazy]);
+
+
 
   return (
     <>
@@ -46,7 +45,7 @@ export const Info = () => {
             </div>
           </li>
         </ul>
-        <div className="mercury-screen">
+        <div className="mercury-screen" ref={screnRef}>
           <div className="screen-bar"></div>
           <div className="board-container">
             <div className="board">
