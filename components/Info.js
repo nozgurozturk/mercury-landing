@@ -5,7 +5,10 @@ export const Info = () => {
   const screnRef = useRef();
   useEffect(() => {
     const handleScroll = () => {
-      if (screnRef.current.getBoundingClientRect().top < window.innerHeight / 2) {
+      if (
+        screnRef.current.getBoundingClientRect().top <
+        window.innerHeight / 2
+      ) {
         setLazy(true);
       }
     };
@@ -16,8 +19,6 @@ export const Info = () => {
       TweenMax.to(screnRef.current, 2.4, { x: -400, ease: Power4.easeOut });
     }
   }, [lazy]);
-
-
 
   return (
     <>

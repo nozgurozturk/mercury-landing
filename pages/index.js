@@ -7,16 +7,24 @@ import { Info } from "../components/Info";
 import { Footer } from "../components/Footer";
 
 const Home = () => {
-  const [loginShow, setLoginShow] = useState(false);
-  const loginActionHandler = () => {
-    setLoginShow(!loginShow);
-  };
-
+  const [login, setLogin] = useState(false);
+  const [signup, setSignUp] = useState(false);
+  const [move, setMove] = useState(false);
   return (
     <div className="mercury-container">
-      <Navigation onClickHandler={() => loginActionHandler()} />
-      <Auth loginShow={loginShow} />
-      <Jumbotron loginShow={loginShow} />
+      <Navigation
+        loginHandler={() => {
+          setLogin(!login);
+   
+        }}
+        signUpHandler={() => {
+          setSignUp(!signup);
+
+        }}
+        closeHandler={() => setMove(!move)}
+      />
+      <Auth loginShow={login} signUpShow={signup} animated={move}  />
+      <Jumbotron animated={move} />
       <Info />
       <Footer />
       <style jsx global>{`

@@ -1,8 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { TweenMax, Power4 } from "gsap";
 
+export const Navigation = ({ loginHandler, signUpHandler, closeHandler }) => {
+  const authContainer = useRef();
+  const closeButton = useRef();
+  const [back, setBack] = useState();
+  const _onLoginHandler = () => {
+    closeHandler()
+    loginHandler();
+    setBack(!back);
+  };
+  const _onSignUpHandler = () => {
+    closeHandler()
+    signUpHandler();
+    setBack(!back);
+  };
+  const _onCloseHandler = () => {
+    closeHandler()
+    setBack(!back);
+  };
+  useEffect(() => {
+    if (!back) {
+      TweenMax.to(authContainer.current, 0.6, {
+        y: 0,
+        ease: Power4.easeInOut
+      }).delay(0.4);
+      TweenMax.to(closeButton.current, 0.4, {
+        y: -200,
+        ease: Power4.easeInOut
+      });
+      TweenMax.to(closeButton.current, 0.1, { display: "none" }).delay(0.4);
 
-export const Navigation = (props) => {
-  
+      TweenMax.to(authContainer.current, 0.1, { display: "flex" }).delay(0.4);
+    }
+    if (back) {
+      TweenMax.to(authContainer.current, 0.4, {
+        y: -200,
+        ease: Power4.easeInOut
+      });
+      TweenMax.to(closeButton.current, 0.6, {
+        y: 0,
+        ease: Power4.easeInOut
+      }).delay(0.4);
+      TweenMax.to(closeButton.current, 0.1, { display: "block" }).delay(0.4);
+
+      TweenMax.to(authContainer.current, 0.1, { display: "none" }).delay(0.4);
+    }
+  }, [back]);
   return (
     <>
       <nav>
@@ -10,10 +54,17 @@ export const Navigation = (props) => {
           <img src="/logo.svg" alt="mercury-logo" />
           Mercury
         </div>
-        <ul className="auth">
-          <li onClick={props.onClickHandler}>login</li>
-          <li>sign up</li>
+        <ul ref={authContainer} className="auth">
+          <li onClick={() => _onLoginHandler()}>login</li>
+          <li onClick={() => _onSignUpHandler()}>sign up</li>
         </ul>
+        <div
+          onClick={() => _onCloseHandler()}
+          ref={closeButton}
+          className="close-btn"
+        >
+          Back
+        </div>
       </nav>
 
       <style jsx>{`
@@ -30,6 +81,12 @@ export const Navigation = (props) => {
         }
         .logo img {
           margin-right: 24px;
+        }
+        .close-btn {
+          display: none;
+          font-family: RoobertBold;
+          color: #404044;
+          font-size: 36px;
         }
         .auth {
           display: flex;
