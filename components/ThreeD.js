@@ -1,12 +1,18 @@
 import * as THREE from "three";
 import { useEffect, useState } from "react";
+import anime from "animejs/lib/anime.es.js";
 
-export default (props) => {
-
+export default props => {
   useEffect(() => {
     const canvas = document.querySelector("canvas");
     let mer = new Mercury(canvas, 0);
     mer.init();
+    if (props.move) {
+      mer.animateCamera();
+    }
+    if (!props.move) {
+      mer.reversed();
+    }
   }, [props.move]);
   class Mercury {
     constructor(canvas, i) {
@@ -15,7 +21,11 @@ export default (props) => {
     }
     addScene = () => {
       const canvas = document.querySelector("#planet-mercury");
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true
+      });
       const scene = new THREE.Scene();
       this.scene = scene;
       this.renderer = renderer;
@@ -67,8 +77,8 @@ export default (props) => {
         false,
         0
       );
-      let points = curve.getPoints(9999);
-      let orbit = new THREE.BufferGeometry()
+      let points = curve.getPoints(600);
+      let orbit = new THREE.Geometry()
         .setFromPoints(points)
         .rotateX(Math.PI / 2.3)
         .rotateY(Math.PI / 3);
@@ -76,26 +86,34 @@ export default (props) => {
     };
 
     moveMercury = () => {
-      if (this.i >= this.orbit.attributes.position.array.length) {
+      let x1, y1, z1;
+      if (this.i >= this.orbit.vertices.length) {
         this.i = 0;
       } else {
-        this.i += 21;
-
-        let x1 = this.orbit.attributes.position.array[this.i];
-        let y1 = this.orbit.attributes.position.array[this.i + 1];
-        let z1 = this.orbit.attributes.position.array[this.i + 2];
-
-        this.mercury.position.set(x1, y1, z1);
-
-        if (props.move) {
-          this.camera.position.set(x1 - 3, y1 + 3, z1 - 3);
-          this.camera.lookAt(
-            this.mercury.position.x - 1,
-            this.mercury.position.y + 6,
-            this.mercury.position.z
-          );
-        }
+        this.i++;
+        x1 = this.orbit.vertices[this.i - 1].x;
+        y1 = this.orbit.vertices[this.i - 1].y;
+        z1 = this.orbit.vertices[this.i - 1].z;
       }
+      this.mercury.position.set(y1, x1, z1);
+    };
+
+    animateCamera = () => {
+      anime({
+        targets: this.camera.position,
+        x: [{ value: 0 }],
+        y: [{ value: 78 }],
+        z: [{ value: 28 }],
+        duration: 6800,
+        easing: "easeInOutExpo"
+      });
+      anime({
+        targets: this.camera.rotation,
+        z: [{ value: Math.PI }],
+        duration: 6000,
+        delay: 800,
+        easing: "easeInOutExpo"
+      });
     };
 
     resizeRendererToDisplaySize = r => {
@@ -122,12 +140,31 @@ export default (props) => {
     init = () => {
       this.addScene();
       this.addCamera();
-
       this.addLight(0xfffafa, 1);
-      this.addSphere(0x444044, 75, 20);
+      this.addSphere(0x444044, 75, 50);
       this.addMercury(0xfff0ff, 5, 30);
       this.addOrbit();
       this.animate();
+    };
+    reversed = () => {
+      this.init();
+      anime({
+        targets: this.camera.position,
+        x: [{ value: 0 }],
+        y: [{ value: 78 }],
+        z: [{ value: 28 }],
+        direction: "reverse",
+        duration: 6800,
+        easing: "easeInOutExpo"
+      });
+      anime({
+        targets: this.camera.rotation,
+        z: [{ value: Math.PI }],
+        duration: 6000,
+        direction: "reverse",
+        delay: 800,
+        easing: "easeInOutExpo"
+      });
     };
   }
 
@@ -140,7 +177,7 @@ export default (props) => {
           right: 0;
           top: 0;
           width: 100%;
-          height: 720px;
+          height: 100%;
           display: block;
           z-index: -1;
         }
