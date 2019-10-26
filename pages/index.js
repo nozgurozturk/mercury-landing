@@ -14,14 +14,14 @@ const Home = () => {
     <div className="mercury-container">
       <Navigation
         loginHandler={() => {
-          setLogin(!login);
+          setLogin(true);
    
         }}
         signUpHandler={() => {
-          setSignUp(!signup);
+          setSignUp(true);
 
         }}
-        closeHandler={() => setMove(!move)}
+        closeHandler={() => {setMove(!move); setSignUp(false); setLogin(false)}}
       />
       <Auth loginShow={login} signUpShow={signup} animated={move}  />
       <Jumbotron animated={move} />

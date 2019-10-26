@@ -33,13 +33,14 @@ export const SignUp = () => {
           form {
             display: flex;
             flex-direction: column;
+            justify-content:space-between;
             width: 40%;
+  
           }
           label {
             font-size: 24px;
             font-family: RoobertRegular;
             color: #cacacd;
-            margin-bottom: 8px;
           }
           a {
             font-size: 18px;
@@ -56,7 +57,7 @@ export const SignUp = () => {
             box-shadow: none;
             border: none;
             border-bottom: 1px solid #404044;
-            margin-bottom: 48px;
+            margin-bottom: 16px;
           }
 
           .button-container {

@@ -18,7 +18,7 @@ export const Login = () => {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-     
+            max-width: 960px;
             width: 100%;
           }
           .login-form h1 {
