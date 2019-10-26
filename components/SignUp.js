@@ -14,7 +14,7 @@ export const SignUp = () => {
         <label>comfirm password</label>
         <input type="password"></input>
         <div className="button-container">
-          <input type="submit" value="signup"></input>
+          <input type="submit" value="sign up"></input>
         </div>
       </form>
       <style jsx>
@@ -38,9 +38,10 @@ export const SignUp = () => {
   
           }
           label {
-            font-size: 24px;
+            font-size: 16px;
             font-family: RoobertRegular;
-            color: #cacacd;
+            color: #404044;
+            margin-bottom: 8px;
           }
           a {
             font-size: 18px;
@@ -58,6 +59,12 @@ export const SignUp = () => {
             border: none;
             border-bottom: 1px solid #404044;
             margin-bottom: 16px;
+          }
+          input[type="submit"] {
+            position: relative;
+            margin-bottom: 0px;
+            border-bottom: none;
+            cursor: pointer;
           }
 
           .button-container {

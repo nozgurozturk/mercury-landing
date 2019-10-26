@@ -4,15 +4,15 @@ export const Info = () => {
   const [lazy, setLazy] = useState(false);
   const screnRef = useRef();
   useEffect(() => {
-    const handleScroll = () => {
-      if (
-        screnRef.current.getBoundingClientRect().top <
-        window.innerHeight / 2
-      ) {
-        setLazy(true);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", () => {
+      if (screnRef.current.getBoundingClientRect().top)
+        if (
+          screnRef.current.getBoundingClientRect().top <
+          window.innerHeight / 2
+        ) {
+          setLazy(true);
+        }
+    });
   }, []);
   useEffect(() => {
     if (lazy) {

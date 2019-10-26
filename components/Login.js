@@ -1,7 +1,7 @@
 export const Login = () => {
   return (
     <div className="login-form">
-      <h1>Welcome Back</h1>
+      <h1>Welcome</h1>
       <form>
         <label>email</label>
         <input type="email" required></input>
@@ -14,7 +14,7 @@ export const Login = () => {
       </form>
       <style jsx>
         {`
-          .login-form{
+          .login-form {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -32,9 +32,9 @@ export const Login = () => {
             width: 40%;
           }
           label {
-            font-size: 24px;
+            font-size: 16px;
             font-family: RoobertRegular;
-            color: #cacacd;
+            color: #404044;
             margin-bottom: 8px;
           }
           a {
@@ -42,7 +42,6 @@ export const Login = () => {
             font-family: RoobertRegular;
             color: #404044;
             margin-right: 32px;
-            line-height: 24px;
           }
           input {
             font-size: 24px;
@@ -54,11 +53,17 @@ export const Login = () => {
             border-bottom: 1px solid #404044;
             margin-bottom: 48px;
           }
-
+          input[type="submit"] {
+            position: relative;
+            margin-bottom: 0px;
+            border-bottom: none;
+            cursor: pointer;
+          }
           .button-container {
             align-self: flex-end;
             display: flex;
             flex-direction: row;
+            align-items: center;
           }
         `}
       </style>

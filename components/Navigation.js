@@ -6,12 +6,12 @@ export const Navigation = ({ loginHandler, signUpHandler, closeHandler }) => {
   const closeButton = useRef();
   const [back, setBack] = useState();
   const _onLoginHandler = () => {
-    closeHandler()
+ 
     loginHandler();
     setBack(!back);
   };
   const _onSignUpHandler = () => {
-    closeHandler()
+
     signUpHandler();
     setBack(!back);
   };
@@ -93,9 +93,27 @@ export const Navigation = ({ loginHandler, signUpHandler, closeHandler }) => {
           flex-direction: row;
           font-size: 24px;
         }
+        .auth li{
+          position:relative;
+          cursor:pointer;
+        }
+        .auth li::after{
+          content:'';
+          position:absolute;
+          left:0;
+          bottom:-8px;
+          height:1px;
+          background-color:#404044;
+          width:0;
+          transition:600ms;
+        }
+        .auth li:hover::after{
+            width:100%;
+        }
         .auth li:first-child {
           margin-right: 32px;
         }
+
       `}</style>
     </>
   );

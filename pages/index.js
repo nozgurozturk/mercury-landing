@@ -15,11 +15,11 @@ const Home = () => {
       <Navigation
         loginHandler={() => {
           setLogin(true);
-   
+          setMove(true)
         }}
         signUpHandler={() => {
           setSignUp(true);
-
+          setMove(true)
         }}
         closeHandler={() => {setMove(!move); setSignUp(false); setLogin(false)}}
       />
