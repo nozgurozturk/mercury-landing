@@ -1,176 +1,150 @@
 import * as THREE from "three";
 import { useEffect, useState } from "react";
-import anime from "animejs/lib/anime.es.js";
+import { TweenMax, Expo, ColorPropsPlugin } from "gsap/all";
 
 export default props => {
+  const [cam, setCamera] = useState(
+    new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    )
+  );
+  let renderer, scene, mercury, orbit, frameID;
+  let i = 0;
+  let canvas = document.querySelector("canvas");
+
+  const addScene = () => {
+    canvas = document.querySelector("#planet-mercury");
+    renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true
+    });
+    scene = new THREE.Scene();
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  };
+  const addLight = (color, ins) => {
+    const ambientLight = new THREE.AmbientLight(0xf4f4f4, 1);
+    let pointLight = new THREE.PointLight(color, ins);
+    pointLight.position.set(50, 200, 80);
+    pointLight.castShadow = true;
+    scene.add(ambientLight);
+    scene.add(pointLight);
+  };
+  const addSphere = (color, size, res) => {
+    let geo = new THREE.SphereGeometry(size, res, res);
+    let mat = new THREE.MeshPhysicalMaterial({
+      color: color,
+      roughness: 0.6,
+      metalness: 0.2
+    });
+    let mesh = new THREE.Mesh(geo, mat);
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+  };
+
+  const addMercury = (color, size, res) => {
+    let geo = new THREE.SphereGeometry(size, res, res);
+    let mat = new THREE.MeshLambertMaterial({
+      color: color
+    });
+    mercury = new THREE.Mesh(geo, mat);
+    mercury.castShadow = true;
+    scene.add(mercury);
+  };
+
+  const addOrbit = () => {
+    let curve = new THREE.EllipseCurve(0, 0, 150, 100, 0, 2 * Math.PI, false, 0);
+    let points = curve.getPoints(600);
+    orbit = new THREE.Geometry()
+      .setFromPoints(points)
+      .rotateX(Math.PI / 2.3)
+      .rotateY(Math.PI / 3);
+  };
+
+  const moveMercury = () => {
+    let x1, y1, z1;
+    if (i >= orbit.vertices.length) {
+      i = 0;
+    } else {
+      i++;
+      x1 = orbit.vertices[i - 1].x;
+      y1 = orbit.vertices[i - 1].y;
+      z1 = orbit.vertices[i - 1].z;
+    }
+    mercury.position.set(y1, x1, z1);
+  };
+  const renderScene = () => {
+    renderer.render(scene, cam);
+  };
+
+  const resizeRendererToDisplaySize = () => {
+    let width = canvas.clientWidth;
+    let height = canvas.clientHeight;
+    renderer.setSize(width, height);
+    cam.aspect = width / height;
+    cam.updateProjectionMatrix();
+    renderScene();
+  };
+
+  const animate = () => {
+    moveMercury();
+    renderScene();
+    frameID = window.requestAnimationFrame(animate);
+    if (resizeRendererToDisplaySize(renderer)) {
+      cam.aspect = canvas.clientWidth / canvas.clientHeight;
+      cam.updateProjectionMatrix();
+    }
+  };
+
+  const animateCamera = bool => {
+    if (bool) {
+      TweenMax.to(cam.position, 4.2, {
+        x: 0,
+        y: 78,
+        z: 28,
+        ease: Expo.easeInOut
+      });
+      TweenMax.to(cam.rotation, 4.2, {
+        z: Math.PI,
+        ease: Expo.easeInOut
+      });
+    } else {
+      TweenMax.to(cam.position, 4.2, {
+        x: -118,
+        y: 0,
+        z: 388,
+        ease: Expo.easeInOut
+      });
+      TweenMax.to(cam.rotation, 4.2, {
+        z: 0,
+        ease: Expo.easeInOut
+      });
+    }
+  };
+  const start = () => {
+    if (!frameID) {
+      frameID = requestAnimationFrame(animate);
+    }
+  };
   useEffect(() => {
-    const canvas = document.querySelector("canvas");
-    let mer = new Mercury(canvas, 0);
-    mer.init();
-    if (props.move) {
-      mer.animateCamera();
-    }
-    if (!props.move) {
-      mer.reversed();
-    }
+    addScene();
+    cam.position.set(-118, 0, 388);
+    addLight(0xfffafa, 2);
+    addSphere(0x444044, 75, 50);
+    addMercury(0xfff0ff, 5, 30);
+    addOrbit();
+    start();
+  }, []);
+
+  useEffect(() => {
+    animateCamera(props.move);
   }, [props.move]);
-  class Mercury {
-    constructor(canvas, i) {
-      this.canvas = canvas;
-      this.i = i;
-    }
-    addScene = () => {
-      const canvas = document.querySelector("#planet-mercury");
-      const renderer = new THREE.WebGLRenderer({
-        canvas,
-        alpha: true,
-        antialias: true
-      });
-      const scene = new THREE.Scene();
-      this.scene = scene;
-      this.renderer = renderer;
-    };
-    addCamera = () => {
-      let camera = new THREE.PerspectiveCamera(
-        45,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      camera.position.set(-118, 0, 388);
-      this.camera = camera;
-    };
-    addLight = (color, ins) => {
-      const ambientLight = new THREE.AmbientLight(0xf4f4f4, 1);
-      let pointLight = new THREE.PointLight(color, ins);
-      pointLight.position.set(-10, 150, 50);
-      this.scene.add(ambientLight);
-      this.scene.add(pointLight);
-    };
-    addSphere = (color, size, res) => {
-      let geo = new THREE.SphereGeometry(size, res, res);
-      let mat = new THREE.MeshLambertMaterial({
-        color: color
-      });
-      let mesh = new THREE.Mesh(geo, mat);
-      this.scene.add(mesh);
-    };
-
-    addMercury = (color, size, res) => {
-      let geo = new THREE.SphereGeometry(size, res, res);
-      let mat = new THREE.MeshLambertMaterial({
-        color: color
-      });
-      let mercury = new THREE.Mesh(geo, mat);
-      this.mercury = mercury;
-      this.scene.add(mercury);
-    };
-
-    addOrbit = () => {
-      let curve = new THREE.EllipseCurve(
-        0,
-        0,
-        120,
-        80,
-        0,
-        2 * Math.PI,
-        false,
-        0
-      );
-      let points = curve.getPoints(600);
-      let orbit = new THREE.Geometry()
-        .setFromPoints(points)
-        .rotateX(Math.PI / 2.3)
-        .rotateY(Math.PI / 3);
-      this.orbit = orbit;
-    };
-
-    moveMercury = () => {
-      let x1, y1, z1;
-      if (this.i >= this.orbit.vertices.length) {
-        this.i = 0;
-      } else {
-        this.i++;
-        x1 = this.orbit.vertices[this.i - 1].x;
-        y1 = this.orbit.vertices[this.i - 1].y;
-        z1 = this.orbit.vertices[this.i - 1].z;
-      }
-      this.mercury.position.set(y1, x1, z1);
-    };
-
-    animateCamera = () => {
-      anime({
-        targets: this.camera.position,
-        x: [{ value: 0 }],
-        y: [{ value: 78 }],
-        z: [{ value: 28 }],
-        duration: 6800,
-        easing: "easeInOutExpo"
-      });
-      anime({
-        targets: this.camera.rotation,
-        z: [{ value: Math.PI }],
-        duration: 6000,
-        delay: 800,
-        easing: "easeInOutExpo"
-      });
-    };
-
-    resizeRendererToDisplaySize = r => {
-      const width = this.canvas.clientWidth;
-      const height = this.canvas.clientHeight;
-      const needResize =
-        this.canvas.width !== width || this.canvas.height !== height;
-      if (needResize) {
-        r.setSize(width, height, false);
-      }
-      return needResize;
-    };
-
-    animate = () => {
-      this.moveMercury();
-      requestAnimationFrame(this.animate);
-      this.renderer.render(this.scene, this.camera);
-      if (this.resizeRendererToDisplaySize(this.renderer)) {
-        this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
-        this.camera.updateProjectionMatrix();
-      }
-    };
-
-    init = () => {
-      this.addScene();
-      this.addCamera();
-      this.addLight(0xfffafa, 1);
-      this.addSphere(0x444044, 75, 50);
-      this.addMercury(0xfff0ff, 5, 30);
-      this.addOrbit();
-      this.animate();
-    };
-    reversed = () => {
-      this.init();
-      anime({
-        targets: this.camera.position,
-        x: [{ value: 0 }],
-        y: [{ value: 78 }],
-        z: [{ value: 28 }],
-        direction: "reverse",
-        duration: 6800,
-        easing: "easeInOutExpo"
-      });
-      anime({
-        targets: this.camera.rotation,
-        z: [{ value: Math.PI }],
-        duration: 6000,
-        direction: "reverse",
-        delay: 800,
-        easing: "easeInOutExpo"
-      });
-    };
-  }
-
   return (
     <>
-      <canvas onClick={() => setMove(!move)} id="planet-mercury"></canvas>
+      <canvas id="planet-mercury"></canvas>
       <style jsx>{`
         canvas {
           position: absolute;

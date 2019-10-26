@@ -1,4 +1,25 @@
+
+import { useEffect, useState } from "react";
+
+
 export const Info = () => {
+  
+
+  useEffect(() => {
+    const GSAP = require('gsap/all')
+    const {TweenMax, Power4} = GSAP
+    const screen = document.querySelector(".mercury-screen");
+    let lazy = false;
+    window.addEventListener("scroll", () => {
+      if (screen.getBoundingClientRect().top < window.innerHeight / 2) {
+        lazy = true;
+      }
+      if (lazy) {
+        TweenMax.to(screen, 2.4, { x: -400, ease: Power4.easeOut });
+      }
+    });
+  }, []);
+
   return (
     <>
       <section className="mercury-info">
@@ -72,7 +93,7 @@ export const Info = () => {
             display: flex;
             flex-direction: row;
             margin-bottom: 48px;
-            width: 620px;
+            width: 1200px;
           }
           .mercury-features li:last-child {
             margin-bottom: 0px;
@@ -116,7 +137,6 @@ export const Info = () => {
             background-color: #e0e0ee;
             box-shadow: 0px 16px 16px rgba(0, 0, 0, 0.25);
             border-radius: 24px;
-            transform: translateX(286px);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -132,38 +152,38 @@ export const Info = () => {
             left: 0;
             border-top-left-radius: 24px;
           }
-          .mercury-screen:after{
+          .mercury-screen:after {
             content: "";
-            position:absolute;
+            position: absolute;
             height: 12px;
             width: 12px;
             top: 13px;
             left: 80px;
             border-radius: 50%;
             background-color: #f0f0ff;
-            z-index:99;
+            z-index: 99;
           }
           .screen-bar:after {
             content: "";
-            position:absolute;
+            position: absolute;
             height: 12px;
             width: 12px;
             top: 13px;
             left: 32px;
             border-radius: 50%;
             background-color: #f0f0ff;
-            z-index:99;
+            z-index: 99;
           }
           .screen-bar:before {
             content: "";
-            position:absolute;
+            position: absolute;
             height: 12px;
             width: 12px;
             top: 13px;
             left: 56px;
             border-radius: 50%;
             background-color: #f0f0ff;
-            z-index:99;
+            z-index: 99;
           }
           .mercury-screen h3 {
             margin-top: 24px;
@@ -186,16 +206,16 @@ export const Info = () => {
             margin-right: 80px;
           }
 
-          .shortcut-container{
+          .shortcut-container {
             display: flex;
             flex-direction: column;
           }
-          .shortcut-container ul{
+          .shortcut-container ul {
             display: flex;
             flex-direction: row;
           }
-          .shortcut-container ul li{
-              margin-right:80px;
+          .shortcut-container ul li {
+            margin-right: 80px;
           }
         `}
       </style>

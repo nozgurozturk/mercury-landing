@@ -1,19 +1,27 @@
+
 import dynamic from "next/dynamic";
 import { useState } from "react";
+
 const ThreeDNoSSR = dynamic(() => import("./ThreeD"), {
   ssr: false
 });
 
 export const Jumbotron = () => {
-  const [move, setMove] = useState(false);
+  const [move, setMove] = useState(false)
   return (
     <>
       <section className="mercury-jumbotron">
         <div className="jbt-phareses">
-          <h1 onClick={()=>{setMove(!move)}}>First plane[t] of your browser</h1>
+          <h1
+            onClick={() => {
+              setMove(!move);
+            }}
+          >
+            First plane[t] of your browser
+          </h1>
           <h3>Simple, usefull and minimal startpage</h3>
         </div>
-        <ThreeDNoSSR move={move}/>
+        <ThreeDNoSSR move={move} />
       </section>
       <style jsx>{`
         .mercury-jumbotron {
