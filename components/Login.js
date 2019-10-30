@@ -1,12 +1,41 @@
+import { useEffect, useState } from "react";
+
 export const Login = () => {
+  const [mail, setMail] = useState();
+  const [password, setPassword] = useState();
+
+  useEffect(() => {}, [name, mail, password]);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+   fetch("https://mercury-server.herokuapp.com/login", {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: mail,
+        password: password
+      })
+    })
+      .then(res => (res.ok ? res : Promise.reject(res)))
+      .then(res => console.log(res.json()));
+  };
+
   return (
     <div className="login-form">
       <h1>Welcome</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label>email</label>
-        <input type="email" required></input>
+        <input
+          type="email"
+          required
+          onChange={e => setMail(e.target.value)}
+        ></input>
         <label>password</label>
-        <input type="password"></input>
+        <input
+          type="password"
+          required
+          onChange={e => setPassword(e.target.value)}
+        ></input>
         <div className="button-container">
           <a>Reset Password</a>
           <input type="submit" value="login"></input>

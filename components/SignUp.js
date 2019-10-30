@@ -1,18 +1,69 @@
+import { useState, useEffect } from "react";
+
 export const SignUp = () => {
+  const [name, setName] = useState();
+  const [mail, setMail] = useState();
+  const [password, setPassword] = useState();
+  const [comfrimPass, setComfirmPass] = useState();
+
+  useEffect(() => {}, [name, mail, password]);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    fetch("https://mercury-server.herokuapp.com/signup", {
+      method: "post",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name,
+        email: mail,
+        password: password
+      })
+    })
+      .then(function(response) {
+        if (response.ok) {
+          return response.json();
+        }
+        {
+          throw new Error("Post Failed");
+        }
+      })
+      .then(function(responseBody) {
+        console.log(responseBody.uri);
+      })
+      .catch(function(error) {
+        console.log("Request failed", error);
+      });
+  };
+
   return (
     <div className="signup-form">
       <h1>Hello Stranger</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label>name</label>
-        <input type="text" required></input>
+        <input
+          type="text"
+          required
+          onChange={e => setName(e.target.value)}
+        ></input>
         <label>email</label>
-        <input type="email" required></input>
+        <input
+          type="email"
+          required
+          onChange={e => setMail(e.target.value)}
+        ></input>
         <label>location</label>
         <input type="text"></input>
         <label>password</label>
-        <input type="password"></input>
+        <input
+          type="password"
+          onChange={e => setPassword(e.target.value)}
+        ></input>
         <label>comfirm password</label>
-        <input type="password"></input>
+        <input
+          type="password"
+          onChange={e => setComfirmPass(e.target.value)}
+        ></input>
         <div className="button-container">
           <input type="submit" value="sign up"></input>
         </div>
@@ -33,9 +84,8 @@ export const SignUp = () => {
           form {
             display: flex;
             flex-direction: column;
-            justify-content:space-between;
+            justify-content: space-between;
             width: 40%;
-  
           }
           label {
             font-size: 16px;
