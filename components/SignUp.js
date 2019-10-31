@@ -8,32 +8,32 @@ export const SignUp = () => {
 
   useEffect(() => {}, [name, mail, password]);
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    fetch("https://mercury-server.herokuapp.com/signup", {
-      method: "post",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name,
-        email: mail,
-        password: password
-      })
-    })
-      .then(function(response) {
-        if (response.ok) {
-          return response.json();
-        }
+    try {
+      const response = await fetch(
+        "https://mercury-server.herokuapp.com/login",
         {
-          throw new Error("Post Failed");
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name : name,
+            email: mail,
+            password: password
+          })
         }
-      })
-      .then(function(responseBody) {
-        console.log(responseBody.uri);
-      })
-      .catch(function(error) {
-        console.log("Request failed", error);
-      });
+      );
+      const json = await response.json();
+      if (response.ok) {
+        console.log(json);
+      } else {
+        console.log("unexpected error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

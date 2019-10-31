@@ -1,23 +1,38 @@
 import { useEffect, useState } from "react";
+import { loadGetInitialProps } from "next/dist/next-server/lib/utils";
 
-export const Login = () => {
+export const Login = props => {
   const [mail, setMail] = useState();
   const [password, setPassword] = useState();
 
   useEffect(() => {}, [name, mail, password]);
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
-   fetch("https://mercury-server.herokuapp.com/login", {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: mail,
-        password: password
-      })
-    })
-      .then(res => (res.ok ? res : Promise.reject(res)))
-      .then(res => console.log(res.json()));
+    try {
+      const response = await fetch(
+        "https://mercury-server.herokuapp.com/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: mail,
+            password: password
+          })
+        }
+      );
+      const json = await response.json();
+      if (response.ok) {
+        console.log(json);
+        console.log(getInitialProps(ctx))
+      } else {
+        console.log("unexpected error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
